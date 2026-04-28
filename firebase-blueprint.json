@@ -1,0 +1,123 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User's main profile and progression state",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "height": { "type": "number" },
+        "weight": { "type": "number" },
+        "age": { "type": "number" },
+        "maxPushups": { "type": "number" },
+        "rank": { "type": "string", "enum": ["Iron", "Bronze", "Silver", "Gold", "Platinum", "Shadow", "Monarch"] },
+        "level": { "type": "number" },
+        "xp": { "type": "number" },
+        "totalXp": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastActive": { "type": "string", "format": "date-time" },
+        "onboarded": { "type": "boolean" },
+        "workoutDays": { "type": "array" }
+      },
+      "required": ["displayName", "email", "rank", "level", "xp"]
+    },
+    "Stats": {
+      "title": "User Stats",
+      "description": "Performance attributes",
+      "type": "object",
+      "properties": {
+        "strength": { "type": "number" },
+        "endurance": { "type": "number" },
+        "agility": { "type": "number" },
+        "flexibility": { "type": "number" },
+        "ironWill": { "type": "number" }
+      }
+    },
+    "Schedule": {
+      "title": "Weekly Schedule",
+      "description": "Workout and rest day assignments",
+      "type": "object",
+      "properties": {
+        "workoutDays": { "type": "array" },
+        "restDays": { "type": "array" }
+      }
+    },
+    "Streak": {
+      "title": "Streak Data",
+      "description": "Consecutive active days tracking",
+      "type": "object",
+      "properties": {
+        "current": { "type": "number" },
+        "longest": { "type": "number" },
+        "lastCheckin": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Workout": {
+      "title": "Workout Session",
+      "description": "A template or custom workout",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string", "enum": ["ai", "manual"] },
+        "exercises": { "type": "array" }
+      }
+    },
+    "DailyQuests": {
+      "title": "Daily Quests",
+      "description": "Quests generated for a specific day",
+      "type": "object",
+      "properties": {
+        "generated": { "type": "boolean" },
+        "quests": { "type": "array" }
+      }
+    },
+    "WorkoutLog": {
+      "title": "Workout Log",
+      "description": "Record of a completed workout",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "workoutId": { "type": "string" },
+        "xpEarned": { "type": "number" },
+        "duration": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile document"
+    },
+    "/users/{userId}/stats/current": {
+      "schema": "Stats",
+      "description": "User statistics document"
+    },
+    "/users/{userId}/schedule/current": {
+      "schema": "Schedule",
+      "description": "User schedule document"
+    },
+    "/users/{userId}/streak/current": {
+      "schema": "Streak",
+      "description": "User streak document"
+    },
+    "/users/{userId}/workouts/{workoutId}": {
+      "schema": "Workout",
+      "description": "Saved workouts"
+    },
+    "/users/{userId}/quests/{date}": {
+      "schema": "DailyQuests",
+      "description": "Quests for a specific date (YYYY-MM-DD)"
+    },
+    "/users/{userId}/history/{logId}": {
+      "schema": "WorkoutLog",
+      "description": "Logged workout history"
+    },
+    "/users/{userId}/badges/{badgeId}": {
+      "schema": "Badge",
+      "description": "Unlocked badges"
+    }
+  }
+}

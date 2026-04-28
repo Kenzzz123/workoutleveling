@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #0a0a0f;
+  --color-surface: #12121a;
+  --color-surface-light: #1a1a24;
+  --color-primary: #7F77DD;
+  --color-primary-dark: #534AB7;
+  --color-accent: #a78bfa;
+  --color-text: #e8e8f0;
+  --color-text-muted: #88889a;
+  
+  --color-iron: #64748b;
+  --color-bronze: #d97706;
+  --color-silver: #94a3b8;
+  --color-gold: #f59e0b;
+  --color-platinum: #2dd4bf;
+  --color-shadow: #8b5cf6;
+  --color-monarch: #ffffff;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-base text-text font-sans antialiased;
+  }
+}
+
+@layer components {
+  .sl-card {
+    @apply bg-surface border border-white/5 rounded-xl p-6 backdrop-blur-sm shadow-2xl;
+  }
+  
+  .sl-button {
+    @apply relative px-6 py-2 rounded-lg font-display font-medium transition-all duration-300 overflow-hidden active:scale-95;
+  }
+  
+  .sl-button-primary {
+    @apply relative px-6 py-2 rounded-lg font-display font-medium transition-all duration-300 overflow-hidden active:scale-95 bg-primary text-white hover:bg-primary-dark shadow-[0_0_15px_rgba(127,119,221,0.3)];
+  }
+
+  .sl-glow {
+    @apply relative;
+  }
+  
+  .sl-glow::after {
+    content: '';
+    @apply absolute inset-0 rounded-lg opacity-0 blur-xl transition-opacity duration-300 bg-primary/20 pointer-events-none;
+  }
+  
+  .sl-glow:hover::after {
+    @apply opacity-100;
+  }
+  
+  .rank-monarch {
+    background: linear-gradient(45deg, #7F77DD, #ffffff, #534AB7);
+    background-size: 200% 200%;
+    animation: monarch-gradient 3s ease infinite;
+  }
+}
+
+@keyframes monarch-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-base;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-light rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/40;
+}

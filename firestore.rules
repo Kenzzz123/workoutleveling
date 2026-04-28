@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+    
+    // --- User Rules ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && incoming().keys().hasAll(['displayName', 'email', 'level', 'xp', 'totalXp', 'rank'])
+        && incoming().level == 1 && incoming().xp == 0;
+      allow update: if isOwner(userId) 
+        && incoming().email == existing().email // Immutable email
+        && incoming().level is number && incoming().xp is number;
+
+      // Subcollections
+      match /stats/current {
+        allow get, write: if isOwner(userId);
+      }
+      match /schedule/current {
+        allow get, write: if isOwner(userId);
+      }
+      match /streak/current {
+        allow get, write: if isOwner(userId);
+      }
+      match /workouts/{workoutId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /quests/{date} {
+        allow read, write: if isOwner(userId);
+      }
+      match /history/{logId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /badges/{badgeId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+  }
+}
